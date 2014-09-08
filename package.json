@@ -1,0 +1,33 @@
+{
+  "name": "lumix",
+  "version": "0.1.0",
+  "description": "A web remote control UI for Panasonic Lumix cameras.",
+  "main": "index.js",
+  "author": {
+    "name": "Todd Treece",
+    "email": "todd@uniontownlabs.org",
+    "url": "http://uniontownlabs.org"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toddtreece/node-lumix"
+  },
+  "keywords": [
+    "lumix",
+    "gh4"
+  ],
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/toddtreece/node-lumix/issues"
+  },
+  "homepage": "https://github.com/toddtreece/node-lumix",
+  "engines": {
+    "node": "^0.10.31"
+  },
+  "dependencies": {
+    "node-ssdp": "^2.0.1"
+  }
+}
