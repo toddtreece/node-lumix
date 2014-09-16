@@ -1,4 +1,8 @@
-var util = require('util');
+var util = require('util'),
+    events = require('events'),
+    xml = require('xml2js').parseString;
+
+util.inherits(Lumix, events.EventEmitter);
 
 var proto = Lumix.prototype;
 
@@ -7,6 +11,7 @@ exports = module.exports = Lumix;
 Lumix.CamFinder = require('./lib/cam_finder');
 Lumix.ImageStream = require('./lib/image_stream');
 Lumix.Request = require('./lib/request');
+Lumix.Control = require('./lib/control');
 
 function Lumix(options) {
 
@@ -14,61 +19,56 @@ function Lumix(options) {
     return new Lumix(options);
   }
 
+  events.EventEmitter.call(this, options);
+
   util._extend(this, options);
+
+  this.init();
 
 }
 
+proto.cam = false;
+proto.state = false;
+proto.request = false;
+proto.control = false;
 
-// TODO: junk beyond this point
+proto.init = function() {
 
-var camfinder = Lumix.CamFinder(),
-    images = Lumix.ImageStream({port: 42222});
+  var self = this,
+      camfinder = Lumix.CamFinder();
 
-camfinder.search(function(cam) {
+  camfinder.search(function(cam) {
 
-  var request = Lumix.Request({address: cam.address});
+    self.cam = cam;
 
-  console.log('Found ' + cam.manufacturer + ' ' + cam.model + ' @ ' + cam.address);
+    self.request = Lumix.Request({address: cam.address});
+    self.control = Lumix.Control({request: self.request});
 
-  request.mode('setsettings').type('liveviewsize').value('vga').queue();
-  request.mode('camcmd').type('recmode').queue();
-  request.mode('startstream').value(images.port).queue(console.log);
+    self.getState();
+
+    self.emit('ready');
+
+  });
+
+};
+
+proto.getState = function() {
+
+  var self = this;
 
   setInterval(function() {
-    request.mode('getstate').queue();
-  }, 1000);
 
-});
+    // get the current state of the cam
+    self.request.mode('getstate').queue(function(err, res, body) {
 
-var express = require('express');
-var app = express();
+      // stash the state
+      xml(body, function(err, parsed) {
+        self.state = parsed;
+      });
 
-app.get('/', function(req, res) {
-  res.send('<img src="lumix.mjpeg">');
-});
+    });
 
-app.get('/lumix.mjpeg', function(req, res) {
+  }, 10000);
 
-  res.writeHead(200, {
-    'Content-Type': 'multipart/x-mixed-replace; boundary=lumix',
-    'Cache-Control': 'no-cache',
-    'Connection': 'close',
-    'Pragma': 'no-cache'
-  });
-
-  images.on('data', function(image) {
-
-    console.log(image);
-    res.write('--lumix\r\n');
-    res.write('Content-Type: image/jpeg\r\n');
-    res.write('Content-Length: ' + image.length + '\r\n');
-    res.write('\r\n');
-    res.write(image, 'binary');
-    res.write('\r\n');
-
-  });
-
-});
-
-app.listen(8080);
+};
 
