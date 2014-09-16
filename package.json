@@ -28,6 +28,7 @@
     "node": "^0.10.31"
   },
   "dependencies": {
-    "node-ssdp": "^2.0.1"
+    "node-ssdp": "^2.0.1",
+    "request": "^2.42.0"
   }
 }
