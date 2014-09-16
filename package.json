@@ -1,7 +1,7 @@
 {
   "name": "lumix",
   "version": "0.1.0",
-  "description": "A web remote control UI for Panasonic Lumix cameras.",
+  "description": "A node.js control library for Panasonic Lumix cameras.",
   "main": "index.js",
   "author": {
     "name": "Todd Treece",
