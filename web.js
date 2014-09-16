@@ -5,7 +5,7 @@ var util = require('util'),
     images = Lumix.ImageStream(),
     lumix = Lumix();
 
-lumix.once('ready', function() {
+lumix.connect(function() {
 
   lumix.request.mode('setsettings').type('liveviewsize').value('vga').queue();
   lumix.request.mode('camcmd').value('recmode').queue();

@@ -23,8 +23,6 @@ function Lumix(options) {
 
   util._extend(this, options);
 
-  this.init();
-
 }
 
 proto.cam = false;
@@ -32,7 +30,7 @@ proto.state = false;
 proto.request = false;
 proto.control = false;
 
-proto.init = function() {
+proto.connect = function(cb) {
 
   var self = this,
       camfinder = Lumix.CamFinder();
@@ -47,6 +45,8 @@ proto.init = function() {
     self.getState();
 
     self.emit('ready');
+
+    cb.call(self, cam);
 
   });
 
