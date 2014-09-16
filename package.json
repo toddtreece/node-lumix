@@ -9,7 +9,7 @@
     "url": "http://uniontownlabs.org"
   },
   "scripts": {
-    "test": "grunt test"
+    "start": "node web.js"
   },
   "repository": {
     "type": "git",
