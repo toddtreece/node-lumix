@@ -28,7 +28,9 @@
     "node": "^0.10.31"
   },
   "dependencies": {
+    "express": "^4.9.0",
     "node-ssdp": "^2.0.1",
-    "request": "^2.42.0"
+    "request": "^2.42.0",
+    "xml2js": "^0.4.4"
   }
 }
